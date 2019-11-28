@@ -7,22 +7,25 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @Auther: zhaomengyi
- * @Date: 2019/11/27 18:42
+ * @Date: 2019/11/28 11:50
  * @Description:
  */
 @Slf4j
 @Component
-public class PreRequestFilter extends ZuulFilter {
+public class AccessLogRequestFilter extends ZuulFilter {
+
     @Override
     public String filterType() {
-        return FilterConstants.PRE_TYPE;
+        return FilterConstants.POST_TYPE;
     }
 
     @Override
     public int filterOrder() {
-        return 0;
+        return FilterConstants.SEND_FORWARD_FILTER_ORDER - 1;
     }
 
     @Override
@@ -33,7 +36,13 @@ public class PreRequestFilter extends ZuulFilter {
     @Override
     public Object run() throws ZuulException {
         RequestContext ctx = RequestContext.getCurrentContext();
-        ctx.set("startTime",System.currentTimeMillis());
+        HttpServletRequest request = ctx.getRequest();
+        Long startTime = (Long)ctx.get("startTime");
+        String uri = request.getRequestURI();
+        Long requestTime = System.currentTimeMillis() - startTime;
+
+        log.info("uri:{} requestTime:{}  ms",uri,requestTime);
+
         return null;
     }
 }
