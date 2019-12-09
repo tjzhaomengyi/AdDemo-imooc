@@ -11,7 +11,7 @@ import java.util.Date;
 /**
  * @Auther: zhaomengyi
  * @Date: 2019/12/6 17:55
- * @Description:
+ * @Description:广告推广单元
  */
 
 @Data
