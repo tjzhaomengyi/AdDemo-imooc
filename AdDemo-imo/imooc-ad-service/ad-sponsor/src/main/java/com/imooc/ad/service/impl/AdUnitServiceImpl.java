@@ -3,9 +3,13 @@ package com.imooc.ad.service.impl;
 import com.imooc.ad.constant.Constants;
 import com.imooc.ad.dao.AdPlanRepository;
 import com.imooc.ad.dao.AdUnitRepository;
+import com.imooc.ad.dao.unit_condition.AdUnitDistrictRepository;
+import com.imooc.ad.dao.unit_condition.AdUnitItRepository;
 import com.imooc.ad.dao.unit_condition.AdUnitKeywordRepository;
 import com.imooc.ad.entity.AdPlan;
 import com.imooc.ad.entity.AdUnit;
+import com.imooc.ad.entity.unit_condition.AdUnitDistrict;
+import com.imooc.ad.entity.unit_condition.AdUnitIt;
 import com.imooc.ad.entity.unit_condition.AdUnitKeyword;
 import com.imooc.ad.exception.AdException;
 import com.imooc.ad.service.IAdUnitService;
@@ -37,13 +41,18 @@ public class AdUnitServiceImpl implements IAdUnitService {
 
     private final AdPlanRepository adPlanRepository;
     private final AdUnitRepository adUnitRepository;
+
     private final AdUnitKeywordRepository adUnitKeywordRepository;
+    private final AdUnitItRepository adUnitItRepository;
+    private final AdUnitDistrictRepository adUnitDistrictRepository;
 
     @Autowired
-    public AdUnitServiceImpl(AdPlanRepository adPlanRepository, AdUnitRepository adUnitRepository, AdUnitKeywordRepository adUnitKeywordRepository) {
+    public AdUnitServiceImpl(AdPlanRepository adPlanRepository, AdUnitRepository adUnitRepository, AdUnitKeywordRepository adUnitKeywordRepository, AdUnitItRepository adUnitItRepository, AdUnitDistrictRepository adUnitDistrictRepository) {
         this.adPlanRepository = adPlanRepository;
         this.adUnitRepository = adUnitRepository;
         this.adUnitKeywordRepository = adUnitKeywordRepository;
+        this.adUnitItRepository = adUnitItRepository;
+        this.adUnitDistrictRepository = adUnitDistrictRepository;
     }
 
     @Override
@@ -92,13 +101,53 @@ public class AdUnitServiceImpl implements IAdUnitService {
     }
 
     @Override
+    @Transactional
     public AdUnitItResponse createUnitIt(AdUnitItRequest request) throws AdException {
-        return null;
+        List<Long> unitIds = request.getUnitIts().stream()
+                .map(AdUnitItRequest.UnitIt::getUnitId)
+                .collect(Collectors.toList());
+
+        if(!isRelatedUnitExist(unitIds)){
+            throw new AdException(Constants.ErrorMsg.REQUEST_PARAM_ERROR);
+        }
+
+        List<Long> ids = Collections.emptyList();
+        List<AdUnitIt> unitIts = new ArrayList<>();
+        if(!CollectionUtils.isEmpty(request.getUnitIts())) {
+            request.getUnitIts().forEach(i -> unitIts.add(
+                    new AdUnitIt(i.getUnitId(), i.getItTag())
+            ));
+
+           ids = adUnitItRepository.saveAll(unitIts).stream().map(AdUnitIt::getId).collect(Collectors.toList());
+
+        }
+
+
+        return new AdUnitItResponse(ids);
     }
 
     @Override
+    @Transactional
     public AdUnitDistrictResponse createUnitDistrict(AdUnitDistrictRequest request) throws AdException {
-        return null;
+        List<Long> unitIds = request.getUnitDistricts().stream()
+                .map(AdUnitDistrictRequest.UnitDistrict::getUnitId)
+                .collect(Collectors.toList());
+
+        if(!isRelatedUnitExist(unitIds)){
+            throw new AdException(Constants.ErrorMsg.REQUEST_PARAM_ERROR);
+        }
+
+        List<AdUnitDistrict> unitDistricts = new ArrayList<>();
+        List<Long> ids = Collections.emptyList();
+        if(!CollectionUtils.isEmpty(request.getUnitDistricts())){
+            request.getUnitDistricts().forEach(d-> unitDistricts.add(
+                    new AdUnitDistrict(d.getUnitId(),d.getProvince(),d.getCity())
+            ));
+
+            ids = adUnitDistrictRepository.saveAll(unitDistricts).stream()
+                    .map(AdUnitDistrict::getId).collect(Collectors.toList());
+        }
+        return new AdUnitDistrictResponse(ids);
     }
 
     //验证推广单元id是否存在,在三个限制Unit推广单元创建中使用
