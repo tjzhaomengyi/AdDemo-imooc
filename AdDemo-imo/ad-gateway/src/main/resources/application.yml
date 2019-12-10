@@ -8,3 +8,12 @@ eureka:
     service-url:
       defaultZone: http://localhost:8000/eureka/
 
+#把ad-sponsor注册到zuul网关
+zuul:
+  prefix: /imooc
+  routes:
+    sponsors:
+      path: /ad-sponsor/**
+      serviceId: eureka-client-ad-sponsor
+      strip-prefix: false #不截断下面的路径
+      #127.0.0.1:9000/imooc/ad-sponsor/create/adPlan
