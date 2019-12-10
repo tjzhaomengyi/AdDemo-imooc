@@ -1,14 +1,8 @@
 package com.imooc.ad.service;
 
 import com.imooc.ad.exception.AdException;
-import com.imooc.ad.vo.request.AdUnitDistrictRequest;
-import com.imooc.ad.vo.request.AdUnitItRequest;
-import com.imooc.ad.vo.request.AdUnitKeywordRequest;
-import com.imooc.ad.vo.request.AdUnitRequest;
-import com.imooc.ad.vo.response.AdUnitDistrictResponse;
-import com.imooc.ad.vo.response.AdUnitItResponse;
-import com.imooc.ad.vo.response.AdUnitKeywordResponse;
-import com.imooc.ad.vo.response.AdUnitResponse;
+import com.imooc.ad.vo.request.*;
+import com.imooc.ad.vo.response.*;
 
 /**
  * @Auther: zhaomengyi
@@ -35,6 +29,8 @@ public interface IAdUnitService {
     AdUnitItResponse createUnitIt(AdUnitItRequest request) throws AdException;
 
     AdUnitDistrictResponse createUnitDistrict(AdUnitDistrictRequest request) throws AdException;
+
+    CreativeUnitResponse createCreativeUnit(CreativeUnitRequest request) throws AdException;
 
 
 

@@ -3,24 +3,21 @@ package com.imooc.ad.service.impl;
 import com.imooc.ad.constant.Constants;
 import com.imooc.ad.dao.AdPlanRepository;
 import com.imooc.ad.dao.AdUnitRepository;
+import com.imooc.ad.dao.CreativeRepository;
 import com.imooc.ad.dao.unit_condition.AdUnitDistrictRepository;
 import com.imooc.ad.dao.unit_condition.AdUnitItRepository;
 import com.imooc.ad.dao.unit_condition.AdUnitKeywordRepository;
+import com.imooc.ad.dao.unit_condition.CreativeUnitRepository;
 import com.imooc.ad.entity.AdPlan;
 import com.imooc.ad.entity.AdUnit;
 import com.imooc.ad.entity.unit_condition.AdUnitDistrict;
 import com.imooc.ad.entity.unit_condition.AdUnitIt;
 import com.imooc.ad.entity.unit_condition.AdUnitKeyword;
+import com.imooc.ad.entity.unit_condition.CreativeUnit;
 import com.imooc.ad.exception.AdException;
 import com.imooc.ad.service.IAdUnitService;
-import com.imooc.ad.vo.request.AdUnitDistrictRequest;
-import com.imooc.ad.vo.request.AdUnitItRequest;
-import com.imooc.ad.vo.request.AdUnitKeywordRequest;
-import com.imooc.ad.vo.request.AdUnitRequest;
-import com.imooc.ad.vo.response.AdUnitDistrictResponse;
-import com.imooc.ad.vo.response.AdUnitItResponse;
-import com.imooc.ad.vo.response.AdUnitKeywordResponse;
-import com.imooc.ad.vo.response.AdUnitResponse;
+import com.imooc.ad.vo.request.*;
+import com.imooc.ad.vo.response.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,14 +42,21 @@ public class AdUnitServiceImpl implements IAdUnitService {
     private final AdUnitKeywordRepository adUnitKeywordRepository;
     private final AdUnitItRepository adUnitItRepository;
     private final AdUnitDistrictRepository adUnitDistrictRepository;
+    private final CreativeRepository adCreativeRepository;
+    private final CreativeUnitRepository adCreateUnitRepository;
 
     @Autowired
-    public AdUnitServiceImpl(AdPlanRepository adPlanRepository, AdUnitRepository adUnitRepository, AdUnitKeywordRepository adUnitKeywordRepository, AdUnitItRepository adUnitItRepository, AdUnitDistrictRepository adUnitDistrictRepository) {
+    public AdUnitServiceImpl(AdPlanRepository adPlanRepository, AdUnitRepository adUnitRepository,
+                             AdUnitKeywordRepository adUnitKeywordRepository, AdUnitItRepository adUnitItRepository,
+                             AdUnitDistrictRepository adUnitDistrictRepository, CreativeRepository adCreativeRepository,
+                             CreativeUnitRepository adCreateUnitRepository) {
         this.adPlanRepository = adPlanRepository;
         this.adUnitRepository = adUnitRepository;
         this.adUnitKeywordRepository = adUnitKeywordRepository;
         this.adUnitItRepository = adUnitItRepository;
         this.adUnitDistrictRepository = adUnitDistrictRepository;
+        this.adCreativeRepository = adCreativeRepository;
+        this.adCreateUnitRepository = adCreateUnitRepository;
     }
 
     @Override
@@ -150,11 +154,49 @@ public class AdUnitServiceImpl implements IAdUnitService {
         return new AdUnitDistrictResponse(ids);
     }
 
-    //验证推广单元id是否存在,在三个限制Unit推广单元创建中使用
+    @Override
+    @Transactional
+    public CreativeUnitResponse createCreativeUnit(CreativeUnitRequest request) throws AdException {
+        List<Long> unitIds = request.getUnitItems().stream()
+                .map(CreativeUnitRequest.CreateUnitItem::getUnitId)
+                .collect(Collectors.toList());
+
+        List<Long> creativeIds = request.getUnitItems().stream()
+                .map(CreativeUnitRequest.CreateUnitItem::getCreativeId)
+                .collect(Collectors.toList());
+
+        if(!(isRelatedUnitExist(unitIds) && isRelatedCreativeExist(creativeIds))){
+            throw new AdException(Constants.ErrorMsg.REQUEST_PARAM_ERROR);
+        }
+
+        List<CreativeUnit> creativeUnits = new ArrayList<>();
+        List<Long> ids = Collections.emptyList();
+        if(!CollectionUtils.isEmpty(request.getUnitItems())){
+            request.getUnitItems().forEach(i -> creativeUnits.add(
+                    new CreativeUnit(i.getCreativeId(),i.getUnitId())
+            ));
+
+            ids = adCreateUnitRepository.saveAll(creativeUnits).stream()
+                    .map(CreativeUnit::getId)
+                    .collect(Collectors.toList());
+        }
+
+        return new CreativeUnitResponse(ids);
+    }
+
+    //验证推广单元id是否存在,在三个限制Unit推广单元创建中使用,在推广单元和创意关联使用
     private boolean isRelatedUnitExist(List<Long> unitIds){
         if(CollectionUtils.isEmpty(unitIds)){
             return false;
         }
         return adUnitRepository.findAllById(unitIds).size() == new HashSet<>(unitIds).size();
+    }
+
+    //验证创意id是否存在，在推广单元和创意关联时候使用
+    private boolean isRelatedCreativeExist(List<Long> creativeIds){
+        if(CollectionUtils.isEmpty(creativeIds)){
+            return false;
+        }
+        return adCreativeRepository.findAllById(creativeIds).size() == new HashSet<>(creativeIds).size();//查找id和传进来的个数一样
     }
 }
