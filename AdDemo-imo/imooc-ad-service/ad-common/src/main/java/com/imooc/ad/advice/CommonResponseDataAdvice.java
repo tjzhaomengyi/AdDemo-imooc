@@ -21,6 +21,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 public class CommonResponseDataAdvice implements ResponseBodyAdvice<Object> {
     @Override
     public boolean supports(MethodParameter methodParameter, Class<? extends HttpMessageConverter<?>> convertType) {
+        //过滤掉IgnoreResponseAdivice这些简单字符串相应的处理，不需要进行相应对象转换。如果不是这个类或者方法，那么在写入响应前可以做一些操作
         if(methodParameter.getDeclaringClass().isAnnotationPresent(IgnoreResponseAdvice.class)){
             return false;
         }
