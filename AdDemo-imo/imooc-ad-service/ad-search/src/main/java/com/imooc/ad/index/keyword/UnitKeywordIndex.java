@@ -3,10 +3,12 @@ package com.imooc.ad.index.keyword;
 import com.imooc.ad.index.IndexAware;
 import com.imooc.ad.utils.CommonUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -74,6 +76,26 @@ public class UnitKeywordIndex implements IndexAware<String,Set<Long>> {//根据k
 
     @Override
     public void delete(String key, Set<Long> value) {
+        log.info("UnitkeywordIndex,before delete:{}",unitKeywordMap);
 
+        //todo:没有更新两个map
+        Set<Long> unitIds = CommonUtils.getOrCreate(key,keywordUnitMap,ConcurrentSkipListSet::new);
+        unitIds.removeAll(value);
+
+        for(Long unitId : value){
+            Set<String> keywordSet = CommonUtils.getOrCreate(unitId,unitKeywordMap,ConcurrentSkipListSet::new);
+            keywordSet.remove(key);
+        }
+
+        log.info("UnitKeywordIndex,after delete:{}",unitKeywordMap);
+    }
+
+    public boolean match(Long unitId, List<String> keywords){
+
+        if(unitKeywordMap.containsKey(unitId) && CollectionUtils.isNotEmpty(unitKeywordMap.get(unitId))){
+            Set<String> unitKeywords = unitKeywordMap.get(unitId);
+            return CollectionUtils.isSubCollection(keywords,unitKeywords);
+        }
+        return false;
     }
 }
