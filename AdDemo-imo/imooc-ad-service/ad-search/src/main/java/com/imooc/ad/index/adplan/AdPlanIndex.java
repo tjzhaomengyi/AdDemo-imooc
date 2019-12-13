@@ -20,7 +20,7 @@ public class AdPlanIndex implements IndexAware<Long,AdPlanObject> {
     private static Map<Long,AdPlanObject> objectMap;
 
     static {
-        objectMap = new ConcurrentHashMap<>();
+        objectMap = new ConcurrentHashMap<>();//静态对应，在堆里，每次ApPlanIndex对象的操作都把数据塞到这个objectMap中
     }
 
     @Override

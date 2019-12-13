@@ -3,7 +3,7 @@ package com.imooc.ad.index;
 /**
  * @Auther: zhaomengyi
  * @Date: 2019/12/11 16:26
- * @Description:
+ * @Description:索引对象
  */
 public interface IndexAware<K,V> {
 

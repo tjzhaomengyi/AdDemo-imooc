@@ -36,6 +36,7 @@ public class DataTable implements ApplicationContextAware, PriorityOrdered {
 
     /**
      * 通过Class获取对应的index服务对象
+     * DataTable.of(AdPlanIndex.class),AdPlanIndex为最终转成的index索引对象类型
      */
 
     public static <T> T of(Class<T> clazz){
