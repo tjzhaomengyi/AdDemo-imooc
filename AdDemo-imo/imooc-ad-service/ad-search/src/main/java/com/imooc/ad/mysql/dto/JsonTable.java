@@ -1,4 +1,4 @@
-package com.imooc.ad.mysql;
+package com.imooc.ad.mysql.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

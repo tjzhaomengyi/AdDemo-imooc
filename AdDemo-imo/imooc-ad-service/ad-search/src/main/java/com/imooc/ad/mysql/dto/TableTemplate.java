@@ -1,4 +1,4 @@
-package com.imooc.ad.mysql;
+package com.imooc.ad.mysql.dto;
 
 import com.imooc.ad.mysql.constant.OpType;
 import lombok.AllArgsConstructor;
@@ -22,10 +22,10 @@ public class TableTemplate {
     private String tableName;
     private String level;
 
-    private Map<OpType, List<String>> opTypeListMap = new HashMap<>();
+    private Map<OpType, List<String>> opTypeFieldMap = new HashMap<>();
 
     /**
-     * 字段索引->字段名
+     * 字段索引->字段名,见TeamplateHolder中解析
      */
     private Map<Integer,String> posMap = new HashMap<>();
 }
