@@ -1,4 +1,4 @@
-package com.imooc.ad.listener;
+package com.imooc.ad.mysql.listener;
 
 import com.imooc.ad.mysql.dto.BinlogRowData;
 
@@ -13,3 +13,5 @@ public interface IListener {
 
     void onEvent(BinlogRowData eventData);//实现增量数据的索引更新，参数是已经转换的BinlogRowData
 }
+
+
