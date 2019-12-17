@@ -27,8 +27,8 @@ public class CreativeIndex implements IndexAware<Long,CreativeObject> {
 
         return objectMap.get(key);
     }
-
     @Override
+
     public void add(Long key, CreativeObject value) {
         log.info("before add:{}",objectMap);
         objectMap.put(key,value);

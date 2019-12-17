@@ -26,7 +26,7 @@ import java.util.Map;
 @Component
 public class IncrementListener implements IListener{
 
-//    @Resource(name = "indexSender")
+    @Resource(name = "indexSender")
     private ISender sender;
 
     @Autowired
