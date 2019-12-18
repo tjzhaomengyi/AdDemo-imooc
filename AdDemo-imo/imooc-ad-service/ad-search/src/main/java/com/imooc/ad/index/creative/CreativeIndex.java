@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * @Auther: zhaomengyi
  * @Date: 2019/12/12 15:13
- * @Description:
+ * @Description:创意索引
  */
 @Slf4j
 @Component
