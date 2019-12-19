@@ -5,6 +5,9 @@ import com.imooc.ad.annotation.IgnoreResponseAdvice;
 import com.imooc.ad.client.SponsorClient;
 import com.imooc.ad.client.vo.AdPlan;
 import com.imooc.ad.client.vo.AdPlanGetRequest;
+import com.imooc.ad.search.ISearch;
+import com.imooc.ad.search.vo.SearchRequest;
+import com.imooc.ad.search.vo.SearchResponse;
 import com.imooc.ad.vo.CommonResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +29,13 @@ public class SearchController {
     @Autowired
     private final RestTemplate restTemplate;
     private final SponsorClient sponsorClient;
+    private final ISearch search;
 
 
-    public SearchController(RestTemplate restTemplate, SponsorClient sponsorClient) {
+    public SearchController(RestTemplate restTemplate, SponsorClient sponsorClient, ISearch search) {
         this.restTemplate = restTemplate;
         this.sponsorClient = sponsorClient;
+        this.search = search;
     }
 
 
@@ -45,6 +50,7 @@ public class SearchController {
         return response;
     }
 
+    //使用feign进行获取
     @IgnoreResponseAdvice
     @PostMapping("/getAdPlans")
     public CommonResponse<List<AdPlan>> getAdPlans(@RequestBody AdPlanGetRequest request){
@@ -52,4 +58,14 @@ public class SearchController {
         return sponsorClient.getAdPlans(request);//如果ad-sponsor下线，可能会造成雪崩，增加断路器
     }
 
+    /**
+     * 提供广告查询的外部接口
+     * @param request
+     * @return
+     */
+    @PostMapping("/fetchAds")
+    public SearchResponse fetchAds(@RequestBody SearchRequest request){
+        log.info("ad-search:fetchAds -> {}",JSON.toJSONString(request));
+        return search.fetchAds(request);
+    }
 }

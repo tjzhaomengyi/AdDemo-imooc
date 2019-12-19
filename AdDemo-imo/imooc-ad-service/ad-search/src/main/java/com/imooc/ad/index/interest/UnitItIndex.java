@@ -85,6 +85,12 @@ public class UnitItIndex implements IndexAware<String, Set<Long>> { //爱好和u
         log.info("unitItIndex,after delete:{}",unitItMap);
     }
 
+    /**
+     * 根据符合UnitIndex中匹配unitId的map索引，过滤传进来的itTags
+     * @param unitId
+     * @param itTags
+     * @return
+     */
     public boolean match(Long unitId, List<String> itTags){
         if(unitItMap.containsKey(unitId) && CollectionUtils.isNotEmpty(unitItMap.get(unitId))){
             Set<String> unitKeywords = unitItMap.get(unitId);

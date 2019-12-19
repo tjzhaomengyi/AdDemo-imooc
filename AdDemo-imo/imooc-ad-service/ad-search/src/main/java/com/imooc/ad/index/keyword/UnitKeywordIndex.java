@@ -90,6 +90,12 @@ public class UnitKeywordIndex implements IndexAware<String,Set<Long>> {//根据k
         log.info("UnitKeywordIndex,after delete:{}",unitKeywordMap);
     }
 
+    /**
+     * 参数中的keywords是否和keywordindex中的该unitId对应的keywords是否匹配
+     * @param unitId
+     * @param keywords
+     * @return
+     */
     public boolean match(Long unitId, List<String> keywords){
 
         if(unitKeywordMap.containsKey(unitId) && CollectionUtils.isNotEmpty(unitKeywordMap.get(unitId))){
