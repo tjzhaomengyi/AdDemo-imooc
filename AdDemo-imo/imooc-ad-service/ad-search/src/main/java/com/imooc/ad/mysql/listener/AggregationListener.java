@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 /**
  * @Auther: zhaomengyi
  * @Date: 2019/12/16 15:04
- * @Description:手机聚合Mysql的Binlog日志
+ * @Description:手动聚合Mysql的Binlog日志
  */
 @Slf4j
 @Component

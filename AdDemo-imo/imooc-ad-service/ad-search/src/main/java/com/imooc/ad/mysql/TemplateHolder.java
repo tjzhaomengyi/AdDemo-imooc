@@ -28,8 +28,8 @@ public class TemplateHolder {
     private final JdbcTemplate jdbcTemplate;//进行mysql元数据查询的jdbc
 
     //查询数据库中表索引和列名的对应关系
-    private String SQL_SCHEMA = "select info.TABLE_SCHEMA,info.TABLE_NAME,info.COLUMN_NAME,info.ORDINAL_POSITION" +
-            "from information_schema.`COLUMNS` info" +
+    private String SQL_SCHEMA = "select info.TABLE_SCHEMA,info.TABLE_NAME,info.COLUMN_NAME,info.ORDINAL_POSITION " +
+            "from information_schema.`COLUMNS` info " +
             "where info.TABLE_SCHEMA = ? and info.TABLE_NAME = ?";
 
     @Autowired

@@ -62,6 +62,9 @@ public class DumpDataService {
     @Autowired
     private AdUnitKeywordRepository keywordRepository;
 
+    /**
+     * Mysql，imooc_ad_data全量数据导出
+     */
     @Test
     public void dumpAdTableData(){
         File dir = new File(DConstant.DATA_ROOT_DIR);
@@ -69,7 +72,14 @@ public class DumpDataService {
             dir.mkdirs();
         }
 
-        //todo:
+        //todo:将表加载到文件中，以json格式表示
+        dumpAdPlanTable(String.format("%s%s",DConstant.DATA_ROOT_DIR,DConstant.AD_PLAN));
+        dumpAdUnitTable(String.format("%s%s",DConstant.DATA_ROOT_DIR,DConstant.AD_UNIT));
+        dumpAdCreativeTable(String.format("%s%s",DConstant.DATA_ROOT_DIR,DConstant.AD_CREATIVE));
+        dumpCreativeUnitTable(String.format("%s%s",DConstant.DATA_ROOT_DIR,DConstant.AD_CREATIVE_UNIT));
+        dumpAdUnitDistrictTable(String.format("%s%s",DConstant.DATA_ROOT_DIR,DConstant.AD_UNIT_DISTRICT));
+        dumpAdUnitItTable(String.format("%s%s",DConstant.DATA_ROOT_DIR,DConstant.AD_UNIT_IT));
+        dumpAdUnitKeywordTable(String.format("%s%s",DConstant.DATA_ROOT_DIR,DConstant.AD_UNIT_KEYWORD));
     }
 
     //拉去adPlanTable

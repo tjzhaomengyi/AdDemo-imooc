@@ -22,10 +22,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class AdUnitOPController {
 
-    @Autowired
+
     private final IAdUnitService adUnitService;
 
-
+    @Autowired
     public AdUnitOPController(IAdUnitService adUnitService) {
         this.adUnitService = adUnitService;
     }

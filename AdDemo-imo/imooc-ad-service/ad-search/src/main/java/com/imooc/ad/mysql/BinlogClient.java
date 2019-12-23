@@ -28,6 +28,7 @@ public class BinlogClient {
     private final AggregationListener listener;
     private final Executor binlogClientConnectExecutor;
 
+
     public BinlogClient(BinlogConfig config, AggregationListener listener, Executor binlogClientConnectExecutor) {
         this.config = config;
         this.listener = listener;

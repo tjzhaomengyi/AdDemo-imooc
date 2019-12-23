@@ -19,6 +19,8 @@ import com.imooc.ad.search.vo.feature.FeatureRelation;
 import com.imooc.ad.search.vo.feature.ItFeature;
 import com.imooc.ad.search.vo.feature.KeywordFeature;
 import com.imooc.ad.search.vo.media.AdSlot;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.ribbon.proxy.annotation.Hystrix;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -36,6 +38,12 @@ import java.util.*;
 @Service
 public class SearchImpl implements ISearch {
 
+    //定义HystrixCommand对应的fallback方法
+    public SearchResponse fallback(SearchRequest request,Throwable e){
+        return null;
+    }
+
+    @HystrixCommand(fallbackMethod = "fallback")//这个方法很少使用，性能较低
     @Override
     public SearchResponse fetchAds(SearchRequest request) {
         //获取request中的广告位信息

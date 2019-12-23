@@ -24,9 +24,10 @@ import java.util.List;
 @RestController
 public class AdPlanOPController {
 
-    @Autowired
+
     private final IAdPlanService adPlanService;
 
+    @Autowired
     public AdPlanOPController(IAdPlanService adPlanService) {
         this.adPlanService = adPlanService;
     }

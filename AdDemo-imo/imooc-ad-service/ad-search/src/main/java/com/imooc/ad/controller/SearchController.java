@@ -26,12 +26,11 @@ import java.util.List;
 @Slf4j
 @RestController
 public class SearchController {
-    @Autowired
     private final RestTemplate restTemplate;
     private final SponsorClient sponsorClient;
     private final ISearch search;
 
-
+    @Autowired
     public SearchController(RestTemplate restTemplate, SponsorClient sponsorClient, ISearch search) {
         this.restTemplate = restTemplate;
         this.sponsorClient = sponsorClient;
