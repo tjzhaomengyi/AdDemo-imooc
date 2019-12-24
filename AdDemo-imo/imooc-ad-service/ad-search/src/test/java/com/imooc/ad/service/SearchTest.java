@@ -53,9 +53,26 @@ public class SearchTest {
                 Collections.singletonList(new DistrictFeature.ProvinceAndCity("安徽省","合肥市")),
                 Arrays.asList("台球","游泳"),
                 FeatureRelation.OR));
-        System.out.println(JSON.toJSONString(request));
-        System.out.println(JSON.toJSONString(search.fetchAds(request)));
+        System.out.println("fetch-reques:"+JSON.toJSONString(request));
+        System.out.println(JSON.toJSONString("fetch-ad:"+search.fetchAds(request)));
 
+
+        //第二个测试条件
+        adSlot = new AdSlot("ad-y", 1, 1080, 720, Arrays.asList(1, 2), 1000);
+        request.setRequestInfo(new SearchRequest.RequestInfo(
+                "aaa",
+                Collections.singletonList(adSlot),
+                buildExampleApp(),
+                buildExampleGeo(),
+                buildExampleDevice()
+        ));
+
+        request.setFeatureInfo(buildExampleFeatureInfo(Arrays.asList("宝马","大众","标志"),
+                Collections.singletonList(new DistrictFeature.ProvinceAndCity("安徽省","合肥市")),
+                Arrays.asList("台球","游泳"),
+                FeatureRelation.AND));
+        System.out.println("fetch-reques:"+JSON.toJSONString(request));
+        System.out.println(JSON.toJSONString("fetch-ad:"+search.fetchAds(request)));
 
     }
 
